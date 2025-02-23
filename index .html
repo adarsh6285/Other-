@@ -1,0 +1,163 @@
+<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iPhone Calculator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="calculator">
+        <div class="display">
+            <div class="previous-value" id="prev-value"></div>
+            <div class="current-value" id="curr-value">0</div>
+        </div>
+        <div class="buttons">
+            <button class="btn gray" onclick="clearDisplay()">AC</button>
+            <button class="btn gray" onclick="invertSign()">+/-</button>
+            <button class="btn gray" onclick="percentage()">%</button>
+            <button class="btn orange" onclick="operator('/')">÷</button>
+
+            <button class="btn black" onclick="appendNumber('7')">7</button>
+            <button class="btn black" onclick="appendNumber('8')">8</button>
+            <button class="btn black" onclick="appendNumber('9')">9</button>
+            <button class="btn orange" onclick="operator('*')">×</button>
+
+            <button class="btn black" onclick="appendNumber('4')">4</button>
+            <button class="btn black" onclick="appendNumber('5')">5</button>
+            <button class="btn black" onclick="appendNumber('6')">6</button>
+            <button class="btn orange" onclick="operator('-')">−</button>
+
+            <button class="btn black" onclick="appendNumber('1')">1</button>
+            <button class="btn black" onclick="appendNumber('2')">2</button>
+            <button class="btn black" onclick="appendNumber('3')">3</button>
+            <button class="btn orange" onclick="operator('+')">+</button>
+
+            <button class="btn black" onclick="appendNumber('0')" style="grid-column: span 2;">0</button>
+            <button class="btn black" onclick="appendNumber('.')">.</button>
+            <button class="btn orange" onclick="calculateResult()">=</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html><style>body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: black;
+    font-family: Arial, sans-serif;
+}
+
+.calculator {
+    width: 300px;
+    background-color: black;
+    border-radius: 20px;
+    padding: 20px;
+}
+
+.display {
+    text-align: right;
+    color: white;
+    padding: 10px;
+    font-size: 30px;
+}
+
+.previous-value {
+    font-size: 20px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.current-value {
+    font-size: 40px;
+    font-weight: bold;
+}
+
+.buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-top: 100px;
+}
+
+.btn {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: none;
+    font-size: 22px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.gray {
+    background-color: #A5A5A5;
+    color: black;
+}
+
+.orange {
+    background-color: #FF9500;
+    color: white;
+}
+
+.black {
+    background-color: #333;
+    color: white;
+}
+
+.btn:active {
+    opacity: 0.7;
+}</style><script>let currExpression = ""; // Pure expression ko store karega
+
+const currDisplay = document.getElementById("curr-value");
+
+function appendNumber(number) {
+    currExpression += number;
+    updateDisplay();
+}
+
+function updateDisplay() {
+    currDisplay.textContent = currExpression || "0";
+}
+
+function clearDisplay() {
+    currExpression = "";
+    updateDisplay();
+}
+
+function operator(op) {
+    if (currExpression === "") return;
+    const lastChar = currExpression[currExpression.length - 1];
+
+    // Agar last character already operator hai toh replace karein
+    if (["+", "-", "*", "/"].includes(lastChar)) {
+        currExpression = currExpression.slice(0, -1) + op;
+    } else {
+        currExpression += op;
+    }
+
+    updateDisplay();
+}
+
+function calculateResult() {
+    try {
+        currExpression = eval(currExpression).toString();
+        updateDisplay();
+    } catch (error) {
+        currExpression = "Error";
+        updateDisplay();
+    }
+}
+
+function invertSign() {
+    if (currExpression === "") return;
+    currExpression = `(${currExpression} * -1)`;
+    updateDisplay();
+}
+
+function percentage() {
+    if (currExpression === "") return;
+    currExpression = `(${currExpression} / 100)`;
+    updateDisplay();
+}</script>
